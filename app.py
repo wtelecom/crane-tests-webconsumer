@@ -1,21 +1,25 @@
 import os
-from flask import Flask
+from flask import Flask, jsonify, render_template
 import redis
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 r = redis.StrictRedis(host='db', port=6379, db=0)
 
 @app.route("/")
 def consume():
-    num = r.get('num')
-    if num == None:
-        num = 0
-    else:
-        num = int(num)
-        num -= 1
+    data = r.get('data')
+    info = None
+    if not data:
+        data = ''
+    if data is 'allo':
+        info = render_template('./hello0.html')
+    elif data is 'estoestodo':
+        info = render_template('./hello.html')
 
-    r.set('num', str(num))
-    return str(num)
+    result = {'data':data, 'action':'get'}
+    if info:
+        return info
+    return jsonify(result)
 
 if __name__ == "__main__":
         port = int(os.environ.get("PORT", 5000))
