@@ -7,22 +7,19 @@ r = redis.StrictRedis(host='db', port=6379, db=0)
 
 @app.route("/")
 def consume():
-    data = r.get('data')
-    info = None
+    data = str(r.get('data'))
     if not data:
         data = ''
-    if data is 'allo':
-        info = render_template('./hello0.html')
-    elif data is 'estoestodo':
-        info = render_template('./hello.html')
-    elif data is 'test':
-        info = render_template('./hello2.html')
-    elif data is 'test2':
-        info = render_template('./hello1.html')
+    if data == 'allo':
+        return render_template('./hello0.html')
+    elif data == 'estoestodo':
+        return render_template('./hello.html')
+    elif data == 'test':
+        return render_template('./hello2.html')
+    elif data == 'test2':
+        return render_template('./hello1.html')
 
     result = {'data':data, 'action':'get'}
-    if info:
-        return info
     return jsonify(result)
 
 if __name__ == "__main__":
